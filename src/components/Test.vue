@@ -1,24 +1,34 @@
 <template>
     <section>
           <div style="margin-top: 50px"></div>
-          <fusioncharts
-          type="illinois"
-          width="600"
-          height="700"
-          dataformat="json"
-          :datasource="fm"
-          :events="events"
-          ></fusioncharts>
+         
+          <div id="chart-container">Map will load here!</div>
+          <p>{{countyMetaData}}</p>
           
     </section>
       </template>
 
 <script>
+    var loremIpsum = require('lorem-ipsum')
+        // var filler = loremIpsum({
+        //     count: 3 // Number of words, sentences, or paragraphs to generate.
+        //         ,
+        //     units: 'paragraphs' // Generate words, sentences, or paragraphs.
+        //         ,
+        //     sentenceLowerBound: 5 // Minimum words per sentence.
+        //         ,
+        //     sentenceUpperBound: 15 // Maximum words per sentence.
+        //         ,
+        //     paragraphLowerBound: 3 // Minimum sentences per paragraph.
+        //         ,
+        //     paragraphUpperBound: 7 // Maximum sentences per paragraph.
+        //         ,
+        //     format: 'plain' // Plain text or html
+        // })
+        // console.log(filler)
+
     export default {
         name: 'IllinoisMap',
-        mounted() {
-
-        },
         methods: {
             getCountyMetaData: function(key, value) {
                 var myObj
@@ -40,17 +50,70 @@
                 return this
             }
         },
+        mounted() {
+
+            this.renderChart(this, this.setChartEvents(this));
+
+
+        },
+        methods: {
+            setChartEvents: function(vm) {
+                const fusionEventsObj = {
+                    "entityClick": function(evt, data) {
+                        vm.countyId = data.id
+                            //console.log('Click: ', vm.countyId)
+                        vm.CountyMetaData = vm.getCountyMetaData('id', vm.countyId)
+                        console.log(vm.CountyMetaData.title)
+                    },
+                }
+                return fusionEventsObj
+
+            },
+            getCountyMetaData: function(key, value) {
+
+                if (key === 'title') {
+                    this.countyMetaData = _.find(this.fm.data, {
+                        'title': value
+                    });
+                }
+                if (key === 'id') {
+                    this.countyMetaData = _.find(this.fm.data, {
+                        'id': value
+                    });
+                }
+
+                return this.countyMetaData
+
+            },
+            renderChart: function(vm, fusionEventsObj) {
+                FusionCharts.ready(function() {
+
+                    this.ariMap = new FusionCharts({
+                        type: 'maps/illinois',
+                        renderAt: 'chart-container',
+                        width: '600',
+                        height: '700',
+                        "events": fusionEventsObj,
+                        dataSource: {
+                            "chart": vm.fm.chart,
+                            "colorrange": vm.fm.colorrange,
+                            "data": vm.fm.data,
+                        }
+                    }).render();
+                })
+
+            },
+
+            log: function(str) {
+                console.log('Log: ', str)
+                return this
+            }
+        },
         data() {
             return {
-                events: {
-                    entityClick: function entityClick(evt, data) {
-                        console.log(this)
-                    }
-                },
-                blank: {},
                 countyId: '',
                 countyMetaData: '',
-                actualValue: '',
+                vm: this,
                 fm: {
                     "chart": {
                         "caption": "Adult Redeploy Illinois",
@@ -564,22 +627,5 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-    h1,
-    h2 {
-        font-weight: normal;
-    }
-    
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-    
-    li {
-        display: inline-block;
-        margin: 0 10px;
-    }
-    
-    a {
-        color: #42b983;
-    }
+
 </style>

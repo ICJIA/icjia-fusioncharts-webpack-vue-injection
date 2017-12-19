@@ -6,7 +6,7 @@ import 'lodash';
 import Vue from 'vue';
 
 // FusionCharts Illinois Map
-import Illinois from './components/Illinois.vue';
+import Illinois from './components/Test.vue';
 import VueFusionCharts from 'vue-fusioncharts';
 import FusionCharts from 'fusioncharts'
 import Charts from 'fusioncharts/fusioncharts.charts'
@@ -18,6 +18,7 @@ IllinoisMap(FusionCharts);
 Vue.use(VueFusionCharts, FusionCharts);
 
 
+
 Vue.config.productionTip = false
 
 import './scss/base.scss'
@@ -25,8 +26,6 @@ import './scss/base.scss'
 const APPS = {
     Illinois
 };
-
-
 
 
 function renderAppInElement(el) {
@@ -39,6 +38,7 @@ function renderAppInElement(el) {
     console.log('Component: ', el.id)
     new Vue({
         el,
+        data: { global: 'global' },
         render(createElem) {
             return createElem(App, {
                 attrs: props
