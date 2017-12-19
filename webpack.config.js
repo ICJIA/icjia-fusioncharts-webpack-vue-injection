@@ -131,7 +131,7 @@ if (process.env.NODE_ENV === 'production') {
             uglifyOptions: {
                 compress: {
                     warnings: false,
-                    //drop_console: true
+                    // drop_console: true
                 }
             },
             sourceMap: true,

@@ -1,6 +1,3 @@
-# Test for injecting Webpack-generated Vue components into a multipage site.
-
-> A Vue.js project
 
 ## Build Setup
 
