@@ -7,11 +7,17 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const moment = require('moment-timezone');
 
+// function resolve(dir) {
+//     return path.relative('node_modules', path.join(__dirname, '..', dir))
+// }
+
+// console.log(resolve('node_modules'))
+
 let banner = 'Webpack build information: ' +
     '\n' + moment().tz("America/Chicago").format("dddd, MMMM Do YYYY, h:mm:ss a") +
-    '\nhttps://github.com/ICJIA/' +
+    '\nhttps://github.com/ICJIA/icjia-fusioncharts-webpack-vue-injection' +
     '\nARI Map Injection Test' +
-    '\ncja.info@illinois.gov'
+    '\ncja.irc@illinois.gov'
 
 module.exports = {
     entry: './src/main.js',
@@ -22,47 +28,39 @@ module.exports = {
         chunkFilename: '[name]-chunk.js',
     },
     module: {
-        rules: [{
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader"
-                })
-            },
-            {
-                test: /\.scss$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader!sass-loader"
-                })
-            },
-            {
-                test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    loaders: {
-                        css: ExtractTextPlugin.extract({
-                            use: 'css-loader',
-                            fallback: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
-                        }),
-                        scss: ExtractTextPlugin.extract({
-                            use: 'css-loader!sass-loader',
-                            fallback: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
-                        }),
+        loaders: [
 
-                    }
-                    // other vue-loader options go here
-                }
+            // {
+            //     test: /moment\.js$/,
+            //     loader: "expose-loader?moment"
+            // },
+            {
+                test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
+                loader: 'file-loader'
             },
+
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/
             },
             {
-                test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
-                loader: 'file-loader'
+                test: /\.(sass|scss|css)$/,
+                loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: 'css-loader!sass-loader' })
             },
+
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+                options: {
+                    loaders: {
+                        scss: 'vue-style-loader!css-loader!sass-loader',
+                        sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+                    },
+                    extractCSS: true
+                }
+            }
+
         ]
     },
     plugins: [
@@ -79,7 +77,10 @@ module.exports = {
             to: 'static',
             ignore: ['.*']
         }]),
-        new ExtractTextPlugin("app.css"),
+        new ExtractTextPlugin({
+            filename: 'app.css',
+            allChunks: true
+        }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             minChunks(module, count) {
@@ -90,7 +91,7 @@ module.exports = {
     ],
     resolve: {
         alias: {
-            'vue$': 'vue/dist/vue.esm.js'
+            'vue$': 'vue/dist/vue.esm.js',
         },
         extensions: ['*', '.js', '.vue', '.json'],
         modules: [

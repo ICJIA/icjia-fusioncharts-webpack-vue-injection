@@ -1,24 +1,75 @@
 <template>
     <section>
-          <div style="margin-top: 50px"></div>
-          <fusioncharts
-          type="illinois"
-          width="600"
-          height="700"
-          dataformat="json"
-          :datasource="fm"
-          :events="events"
-          ></fusioncharts>
-          
+       
+    <div style="height: 50px"></div>
+    <div style="background: #fff; border-top: 1px solid #bbb;border-bottom: 1px solid #bbb;">
+        <div class="container-fluid" style="padding: 50px 30px 50px 30px">
+            <div class="row">
+                <div class="col-md-6 hidden-xs hidden-sm">
+                    <div class="vue-test">test</div>
+                    <div id="chart-container">Map will load here!</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-center">
+                        <div style="color: #aaa; font-family: 'Lato', sans-serif; font-weight: 900; margin-bottom: 15px; margin-top: 20px;">Display ARI Fact Sheet</div>
+
+
+
+                        <!-- <select class="selectpicker" style="font-size: 14px; font-family: 'Lato', sans-serif !important" title="Choose one of the following...">
+                        <optgroup label="Adult Redeploy Illinois Sites" style="font-family: 'Lato', sans-serif !important;">
+                        
+                        <option value="2nd Judicial Circuit">2nd Judicial Circuit</option>
+                        <option value="Boone County">Boone County</option>
+                        <option value="Cook County">Cook County</option>
+                        <option value="DuPage County">DuPage County</option>
+                            
+                          
+                        </optgroup>
+                        
+                      </select> -->
+                    </div>
+
+
+
+                    <div class="panel panel-default factsheet" style="margin-top: 30px">
+                        <div class="panel-heading">
+                            <div class="panel-title" style="font-weight: 900; text-transform: uppercase"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="panel-text"></div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
     </section>
       </template>
 
 <script>
+    var loremIpsum = require('lorem-ipsum')
+        // var filler = loremIpsum({
+        //     count: 3 // Number of words, sentences, or paragraphs to generate.
+        //         ,
+        //     units: 'paragraphs' // Generate words, sentences, or paragraphs.
+        //         ,
+        //     sentenceLowerBound: 5 // Minimum words per sentence.
+        //         ,
+        //     sentenceUpperBound: 15 // Maximum words per sentence.
+        //         ,
+        //     paragraphLowerBound: 3 // Minimum sentences per paragraph.
+        //         ,
+        //     paragraphUpperBound: 7 // Maximum sentences per paragraph.
+        //         ,
+        //     format: 'plain' // Plain text or html
+        // })
+        // console.log(filler)
+
     export default {
         name: 'IllinoisMap',
-        mounted() {
-
-        },
         methods: {
             getCountyMetaData: function(key, value) {
                 var myObj
@@ -40,17 +91,76 @@
                 return this
             }
         },
+        mounted() {
+
+            this.renderChart(this, this.setChartEvents(this));
+
+
+        },
+        methods: {
+            loadAjaxFactSheet: function(meta) {
+                console.log('Load fact sheet: ', meta.title)
+            },
+            setChartEvents: function(vm) {
+                const fusionEventsObj = {
+                    "entityClick": function(evt, data) {
+                        vm.countyId = data.id
+                            //console.log('Click: ', vm.countyId)
+                        vm.CountyMetaData = vm.getCountyMetaData('id', vm.countyId)
+                            //console.log(vm.CountyMetaData.title)
+                        if (vm.CountyMetaData.displayValue != '') {
+                            vm.loadAjaxFactSheet(vm.CountyMetaData)
+                        }
+                    },
+                }
+                return fusionEventsObj
+
+            },
+            getCountyMetaData: function(key, value) {
+
+                if (key === 'title') {
+                    this.countyMetaData = _.find(this.fm.data, {
+                        'title': value
+                    });
+                }
+                if (key === 'id') {
+                    this.countyMetaData = _.find(this.fm.data, {
+                        'id': value
+                    });
+                }
+
+                return this.countyMetaData
+
+            },
+            renderChart: function(vm, fusionEventsObj) {
+                FusionCharts.ready(function() {
+
+                    this.ariMap = new FusionCharts({
+                        type: 'maps/illinois',
+                        renderAt: 'chart-container',
+                        width: '600',
+                        height: '700',
+                        "events": fusionEventsObj,
+                        dataSource: {
+                            "chart": vm.fm.chart,
+                            "colorrange": vm.fm.colorrange,
+                            "data": vm.fm.data,
+                        }
+                    }).render();
+                })
+
+            },
+
+            log: function(str) {
+                console.log('Log: ', str)
+                return this
+            }
+        },
         data() {
             return {
-                events: {
-                    entityClick: function entityClick(evt, data) {
-                        console.log(this)
-                    }
-                },
-                blank: {},
                 countyId: '',
                 countyMetaData: '',
-                actualValue: '',
+                vm: this,
                 fm: {
                     "chart": {
                         "caption": "Adult Redeploy Illinois",
@@ -564,22 +674,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-    h1,
-    h2 {
-        font-weight: normal;
-    }
-    
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-    
-    li {
-        display: inline-block;
-        margin: 0 10px;
-    }
-    
-    a {
-        color: #42b983;
+    .vue-test {
+        font-size: 36px;
     }
 </style>

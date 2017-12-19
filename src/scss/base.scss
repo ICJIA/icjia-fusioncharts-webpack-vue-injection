@@ -1,4 +1,6 @@
-// @import "~bootstrap/scss/bootstrap";
-body {
-    color: #eee
+// import Bootstrap styles
+@import '../../node_modules/bootstrap/dist/css/bootstrap.css';
+// App styles
+#body {
+    background: #555 !important;
 }

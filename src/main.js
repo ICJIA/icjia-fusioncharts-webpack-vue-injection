@@ -1,12 +1,19 @@
 import jQuery from 'jquery';
 // window.$ = window.JQuery = jQuery;
 import 'bootstrap';
-import '../node_modules/bootstrap/dist/css/bootstrap.css'
+
 import 'lodash';
 import Vue from 'vue';
 
+// Vue components for app
+import Illinois from './components/Illinois.vue';
+
+const APPS = {
+    Illinois
+};
+
+
 // FusionCharts Illinois Map
-import Illinois from './components/Test.vue';
 import VueFusionCharts from 'vue-fusioncharts';
 import FusionCharts from 'fusioncharts'
 import Charts from 'fusioncharts/fusioncharts.charts'
@@ -17,15 +24,11 @@ Maps(FusionCharts);
 IllinoisMap(FusionCharts);
 Vue.use(VueFusionCharts, FusionCharts);
 
-
+// import '../node_modules/bootstrap/dist/css/bootstrap.css'
+import './scss/base.scss'
 
 Vue.config.productionTip = false
 
-import './scss/base.scss'
-
-const APPS = {
-    Illinois
-};
 
 
 function renderAppInElement(el) {
