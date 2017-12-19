@@ -1,0 +1,52 @@
+{
+    "name": "icjia-fc-webpack-vue-injection",
+    "description": "A Vue.js project",
+    "version": "1.0.0",
+    "author": "Chris Schweda <cschweda@gmail.com>",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+        "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+        "build": "cross-env NODE_ENV=production webpack --progress --hide-modules --env.version $(webpack -v)"
+    },
+    "dependencies": {
+        "bootstrap": "^3.3.7",
+        "bootstrap-select": "^1.12.4",
+        "clean-webpack-plugin": "^0.1.17",
+        "compression-webpack-plugin": "^1.1.2",
+        "copy-webpack-plugin": "^4.3.0",
+        "moment-timezone": "^0.5.14",
+        "uglifyjs-webpack-plugin": "^1.1.4",
+        "vue": "^2.5.11",
+        "vue-fusioncharts": "^1.0.0-beta.3"
+    },
+    "browserslist": [
+        "> 1%",
+        "last 2 versions",
+        "not ie <= 8"
+    ],
+    "devDependencies": {
+        "babel-core": "^6.26.0",
+        "babel-loader": "^7.1.2",
+        "babel-preset-env": "^1.6.0",
+        "babel-preset-stage-3": "^6.24.1",
+        "cross-env": "^5.0.5",
+        "css-loader": "^0.28.7",
+        "expose-loader": "^0.7.4",
+        "extract-text-webpack-plugin": "^3.0.2",
+        "file-loader": "^1.1.5",
+        "htmlclean-cli": "^1.0.6",
+        "jquery": "^3.2.1",
+        "lodash": "^4.17.4",
+        "moment": "^2.19.4",
+        "node-sass": "^4.5.3",
+        "sass-loader": "^6.0.6",
+        "serve": "^6.4.1",
+        "style-loader": "^0.19.1",
+        "url-loader": "^0.6.2",
+        "vue-loader": "^13.0.5",
+        "vue-template-compiler": "^2.4.4",
+        "webpack": "^3.6.0",
+        "webpack-dev-server": "^2.9.1"
+    }
+}
