@@ -11,24 +11,15 @@
                 </div>
                 <div class="col-md-6">
                     
-                        
-
-
-                        
-                        <!-- <select class="selectpicker" style="font-size: 14px; font-family: 'Lato', sans-serif !important" title="Choose one of the following...">
-                        <optgroup label="Adult Redeploy Illinois Sites" style="font-family: 'Lato', sans-serif !important;">
-                        
-                        <option value="2nd Judicial Circuit">2nd Judicial Circuit</option>
-                        <option value="Boone County">Boone County</option>
-                        <option value="Cook County">Cook County</option>
-                        <option value="DuPage County">DuPage County</option>
-                            
-                          
-                        </optgroup>
-                        
-                      </select> -->
                     
-
+                      
+                      <div class="text-center">
+                      <select v-model="selected" @change="getSelection($event)">
+                            <option v-for="data in selectData" :value="data.id">{{ data.title }}</option>
+                        </select>
+                    </div>
+                    
+                        
 
                     <display-fact-sheet :countyMetaData="countyMetaData" :visibility="visibility"></display-fact-sheet>
                     
@@ -46,21 +37,51 @@
 <script>
     const loremIpsum = require('lorem-ipsum')
     import DisplayFactSheet from './DisplayFactSheet.vue'
+    import axios from 'axios'
+    import {
+        EventBus
+    } from './event-bus.js';
     export default {
         name: 'IllinoisMap',
         components: {
             DisplayFactSheet
         },
         mounted() {
-
-            this.renderChart(this, this.setChartEvents(this));
-
+            this.initializeChart()
+            this.initializeCountySelect();
         },
         methods: {
+            initializeCountySelect() {
+                let data = _.uniqBy(this.fm.data, function(elem) {
+                    return JSON.stringify(_.pick(elem, ['title']));
+                });
+                data = _.map(data, o => _.omit(o, ['toolText', 'value', 'displayValue']));
+
+                data = _.orderBy(data, ['title'], ['asc']);
+
+                data = _.filter(data, (o) => (typeof o.title !== 'undefined'))
+
+                this.selectData = data;
+
+                return
+
+
+            },
+            initializeChart() {
+                this.renderChart(this, this.setChartEvents(this));
+            },
+            getSelection(event) {
+                this.selected = `${event.target.value}`
+                let metaData = this.getCountyMetaData('id', this.selected)
+                this.countyMetaData = metaData
+                this.visibility = true;
+                this.loadFactSheet(this.countyMetaData.title)
+            },
             loadFactSheet: function(t) {
                 this.countyMetaData.factSheet = this.getFillerContent(3, 'paragraphs', 'html');
                 //console.log('Load fact sheet: ', t, this.countyMetaData.factSheet)
             },
+
             getFillerContent: function(count, units, format) {
                 let filler = loremIpsum({
                     count: count // Number of words, sentences, or paragraphs to generate.
@@ -111,6 +132,8 @@
                             vm.visibility = true;
                             //console.log('click')
                             vm.loadFactSheet(vm.countyMetaData.title)
+                            vm.selected = data.id
+
                         }
                     },
                 }
@@ -139,10 +162,33 @@
         },
         data() {
             return {
+                selected: '',
                 countyId: '',
                 visibility: false,
                 countyMetaData: {},
                 vm: this,
+                selectData: {},
+                testData: [{
+                    "id": "001",
+                    "displayValue": "AD",
+                    "value": "500",
+                    "toolText": "Adams",
+                    "title": "Adams County"
+                }, {
+                    "id": "003",
+                    "displayValue": "",
+                    "title": "Adams County"
+                }, {
+                    "id": "005",
+                    "displayValue": "",
+                    "title": "Boone County"
+                }, {
+                    "id": "007",
+                    "displayValue": "BO",
+                    "value": "10",
+                    "toolText": "Boone",
+                    "title": "Boone County"
+                }],
                 fm: {
                     "chart": {
                         "caption": "Adult Redeploy Illinois",

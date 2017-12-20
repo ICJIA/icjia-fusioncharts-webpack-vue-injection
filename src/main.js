@@ -1,9 +1,11 @@
-import jQuery from 'jquery';
-// window.$ = window.JQuery = jQuery;
+import jQuery from 'jquery-slim';
+window.$ = window.JQuery = jQuery;
 import 'bootstrap';
-
+import moment from 'moment'
 import 'lodash';
 import Vue from 'vue';
+
+
 
 // Vue components for app
 import Illinois from './components/Illinois.vue';
@@ -24,6 +26,10 @@ Maps(FusionCharts);
 IllinoisMap(FusionCharts);
 Vue.use(VueFusionCharts, FusionCharts);
 
+
+
+
+
 // import '../node_modules/bootstrap/dist/css/bootstrap.css'
 import './scss/base.scss'
 
@@ -38,7 +44,7 @@ function renderAppInElement(el) {
     // Props as data attributes:
     // <div class="__vue-root" data-message="Hello" id="Greet"></div>
     const props = Object.assign({}, el.dataset);
-    console.log('Component: ', el.id)
+    console.log('Load component: ', el.id)
     new Vue({
         el,
         data: { global: 'global' },
@@ -50,4 +56,6 @@ function renderAppInElement(el) {
     })
 }
 
-document.querySelectorAll('.__vue-root').forEach(renderAppInElement)
+document.addEventListener("DOMContentLoaded", function(event) {
+    document.querySelectorAll('.__vue-root').forEach(renderAppInElement)
+});

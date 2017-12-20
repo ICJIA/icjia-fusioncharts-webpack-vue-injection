@@ -31,10 +31,10 @@ module.exports = {
     module: {
         loaders: [
 
-            // {
-            //     test: /moment\.js$/,
-            //     loader: "expose-loader?moment"
-            // },
+            {
+                test: /moment\.js$/,
+                loader: "expose-loader?moment"
+            },
             {
                 test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
                 loader: 'file-loader'
@@ -66,12 +66,13 @@ module.exports = {
     },
     plugins: [
         new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery',
-            'window.jQuery': 'jquery',
+            $: 'jquery-slim',
+            jQuery: 'jquery-slim',
+            'window.jQuery': 'jquery-slim',
             Popper: ['popper.js', 'default'],
 
         }),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 
         new CopyWebpackPlugin([{
             from: path.resolve(__dirname, './static'),

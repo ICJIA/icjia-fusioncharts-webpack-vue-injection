@@ -11,6 +11,7 @@
         "report": "cross-env NODE_ENV=production REPORT_ENV=report webpack --progress --hide-modules"
     },
     "dependencies": {
+        "axios": "^0.17.1",
         "bootstrap": "^3.3.7",
         "bootstrap-select": "^1.12.4",
         "bundle-buddy": "^0.2.1",
@@ -18,10 +19,12 @@
         "compression-webpack-plugin": "^1.1.2",
         "copy-webpack-plugin": "^4.3.0",
         "global": "^4.3.2",
+        "jquery-slim": "^3.0.0",
         "lorem-ipsum": "^1.0.4",
         "moment-timezone": "^0.5.14",
         "uglifyjs-webpack-plugin": "^1.1.4",
         "vue": "^2.5.11",
+        "vue-axios": "^2.0.2",
         "vue-fusioncharts": "^1.0.0-beta.3",
         "webpack-bundle-analyzer": "^2.9.1"
     },
@@ -43,7 +46,7 @@
         "htmlclean-cli": "^1.0.6",
         "jquery": "^3.2.1",
         "lodash": "^4.17.4",
-        "moment": "^2.19.4",
+        "moment": "^2.20.1",
         "node-sass": "^4.5.3",
         "sass-loader": "^6.0.6",
         "serve": "^6.4.1",
