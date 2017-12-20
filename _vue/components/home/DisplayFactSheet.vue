@@ -17,7 +17,7 @@
 <script>
     import {
         EventBus
-    } from './event-bus.js';
+    } from '../../event-bus.js';
     export default {
         props: ['countyMetaData', 'visibility'],
         name: 'DisplayFactSheet',

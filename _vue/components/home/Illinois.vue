@@ -40,7 +40,7 @@
     import axios from 'axios'
     import {
         EventBus
-    } from './event-bus.js';
+    } from '../../event-bus.js';
     export default {
         name: 'IllinoisMap',
         components: {

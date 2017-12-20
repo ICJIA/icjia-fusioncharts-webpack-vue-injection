@@ -8,7 +8,7 @@ import Vue from 'vue';
 
 
 // Vue components for app
-import Illinois from './components/Illinois.vue';
+import Illinois from './components/home/Illinois.vue';
 
 const APPS = {
     Illinois
@@ -31,7 +31,7 @@ Vue.use(VueFusionCharts, FusionCharts);
 
 
 // import '../node_modules/bootstrap/dist/css/bootstrap.css'
-import './scss/base.scss'
+import '../scss/base.scss'
 
 Vue.config.productionTip = false
 

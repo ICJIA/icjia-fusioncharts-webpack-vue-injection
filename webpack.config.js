@@ -21,11 +21,11 @@ let banner = 'Webpack build information: ' +
     '\ncja.irc@illinois.gov'
 
 module.exports = {
-    entry: './src/main.js',
+    entry: './_vue/main.js',
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/dist/',
-        filename: '[name].js',
+        filename: './js/[name].js',
         chunkFilename: '[name]-chunk.js',
     },
     module: {
@@ -80,7 +80,7 @@ module.exports = {
             ignore: ['.*']
         }]),
         new ExtractTextPlugin({
-            filename: 'app.css',
+            filename: './css/app.css',
             allChunks: true
         }),
         // new webpack.optimize.CommonsChunkPlugin({
