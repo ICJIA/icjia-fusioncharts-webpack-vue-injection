@@ -6,15 +6,15 @@
         <div class="container-fluid" style="padding: 50px 30px 50px 30px">
             <div class="row">
                 <div class="col-md-6 hidden-xs hidden-sm">
-                    <div class="vue-test">test</div>
+                    
                     <div id="chart-container">Map will load here!</div>
                 </div>
                 <div class="col-md-6">
-                    <div class="text-center">
-                        <div style="color: #aaa; font-family: 'Lato', sans-serif; font-weight: 900; margin-bottom: 15px; margin-top: 20px;">Display ARI Fact Sheet</div>
+                    
+                        
 
 
-
+                        
                         <!-- <select class="selectpicker" style="font-size: 14px; font-family: 'Lato', sans-serif !important" title="Choose one of the following...">
                         <optgroup label="Adult Redeploy Illinois Sites" style="font-family: 'Lato', sans-serif !important;">
                         
@@ -27,18 +27,11 @@
                         </optgroup>
                         
                       </select> -->
-                    </div>
+                    
 
 
-
-                    <div class="panel panel-default factsheet" style="margin-top: 30px">
-                        <div class="panel-heading">
-                            <div class="panel-title" style="font-weight: 900; text-transform: uppercase"></div>
-                        </div>
-                        <div class="panel-body">
-                            <div class="panel-text"></div>
-                        </div>
-                    </div>
+                    <display-fact-sheet :countyMetaData="countyMetaData" :visibility="visibility"></display-fact-sheet>
+                    
 
 
 
@@ -46,31 +39,46 @@
             </div>
         </div>
     </div>
+    <div style="height: 50px"></div>
     </section>
       </template>
 
 <script>
-    var loremIpsum = require('lorem-ipsum')
-        // var filler = loremIpsum({
-        //     count: 3 // Number of words, sentences, or paragraphs to generate.
-        //         ,
-        //     units: 'paragraphs' // Generate words, sentences, or paragraphs.
-        //         ,
-        //     sentenceLowerBound: 5 // Minimum words per sentence.
-        //         ,
-        //     sentenceUpperBound: 15 // Maximum words per sentence.
-        //         ,
-        //     paragraphLowerBound: 3 // Minimum sentences per paragraph.
-        //         ,
-        //     paragraphUpperBound: 7 // Maximum sentences per paragraph.
-        //         ,
-        //     format: 'plain' // Plain text or html
-        // })
-        // console.log(filler)
-
+    const loremIpsum = require('lorem-ipsum')
+    import DisplayFactSheet from './DisplayFactSheet.vue'
     export default {
         name: 'IllinoisMap',
+        components: {
+            DisplayFactSheet
+        },
+        mounted() {
+
+            this.renderChart(this, this.setChartEvents(this));
+
+        },
         methods: {
+            loadFactSheet: function(t) {
+                this.countyMetaData.factSheet = this.getFillerContent(3, 'paragraphs', 'html');
+                //console.log('Load fact sheet: ', t, this.countyMetaData.factSheet)
+            },
+            getFillerContent: function(count, units, format) {
+                let filler = loremIpsum({
+                    count: count // Number of words, sentences, or paragraphs to generate.
+                        ,
+                    units: units // Generate words, sentences, or paragraphs.
+                        ,
+                    sentenceLowerBound: 5 // Minimum words per sentence.
+                        ,
+                    sentenceUpperBound: 15 // Maximum words per sentence.
+                        ,
+                    paragraphLowerBound: 6 // Minimum sentences per paragraph.
+                        ,
+                    paragraphUpperBound: 8 // Maximum sentences per paragraph.
+                        ,
+                    format: format // Plain text or html
+                })
+                return filler
+            },
             getCountyMetaData: function(key, value) {
                 var myObj
                 if (key === 'title') {
@@ -83,55 +91,33 @@
                         'id': value
                     });
                 }
-
+                return myObj
 
             },
             log: function(str) {
                 console.log('Log: ', str)
                 return this
-            }
-        },
-        mounted() {
-
-            this.renderChart(this, this.setChartEvents(this));
-
-
-        },
-        methods: {
-            loadAjaxFactSheet: function(meta) {
-                console.log('Load fact sheet: ', meta.title)
             },
             setChartEvents: function(vm) {
                 const fusionEventsObj = {
                     "entityClick": function(evt, data) {
                         vm.countyId = data.id
-                            //console.log('Click: ', vm.countyId)
-                        vm.CountyMetaData = vm.getCountyMetaData('id', vm.countyId)
-                            //console.log(vm.CountyMetaData.title)
-                        if (vm.CountyMetaData.displayValue != '') {
-                            vm.loadAjaxFactSheet(vm.CountyMetaData)
+
+                        let metaData = vm.getCountyMetaData('id', vm.countyId)
+                            //console.log(metaData.displayValue)
+
+                        if (metaData.displayValue != '') {
+                            vm.countyMetaData = metaData
+                            vm.visibility = true;
+                            //console.log('click')
+                            vm.loadFactSheet(vm.countyMetaData.title)
                         }
                     },
                 }
                 return fusionEventsObj
 
             },
-            getCountyMetaData: function(key, value) {
 
-                if (key === 'title') {
-                    this.countyMetaData = _.find(this.fm.data, {
-                        'title': value
-                    });
-                }
-                if (key === 'id') {
-                    this.countyMetaData = _.find(this.fm.data, {
-                        'id': value
-                    });
-                }
-
-                return this.countyMetaData
-
-            },
             renderChart: function(vm, fusionEventsObj) {
                 FusionCharts.ready(function() {
 
@@ -149,17 +135,13 @@
                     }).render();
                 })
 
-            },
-
-            log: function(str) {
-                console.log('Log: ', str)
-                return this
             }
         },
         data() {
             return {
                 countyId: '',
-                countyMetaData: '',
+                visibility: false,
+                countyMetaData: {},
                 vm: this,
                 fm: {
                     "chart": {

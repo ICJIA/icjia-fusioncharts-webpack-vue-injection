@@ -6,6 +6,7 @@ const CompressionPlugin = require("compression-webpack-plugin")
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const moment = require('moment-timezone');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // function resolve(dir) {
 //     return path.relative('node_modules', path.join(__dirname, '..', dir))
@@ -81,6 +82,16 @@ module.exports = {
             filename: 'app.css',
             allChunks: true
         }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     children: true,
+        //     // (use all children of the chunk)
+
+        //     async: 'common',
+        //     // (create an async commons chunk)
+
+        //     minChunks: 3,
+        //     // (3 children must share the module before it's separated)
+        // }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             minChunks(module, count) {
@@ -111,6 +122,10 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
+
+
+
+
     module.exports.devtool = '#source-map'
         // http://vue-loader.vuejs.org/en/workflow/production.html
     module.exports.plugins = (module.exports.plugins || []).concat([
@@ -145,5 +160,15 @@ if (process.env.NODE_ENV === 'production') {
         new webpack.LoaderOptionsPlugin({
             minimize: true
         })
+
+
+
+
+    ])
+}
+
+if (process.env.REPORT_ENV === 'report') {
+    module.exports.plugins = (module.exports.plugins || []).concat([
+        new BundleAnalyzerPlugin()
     ])
 }
