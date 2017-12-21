@@ -176,7 +176,7 @@
                 FusionCharts.ready(function() {
 
                     this.ariMap = new FusionCharts({
-                        type: 'maps/illinois',
+                        type: 'illinois',
                         renderAt: 'chart-container',
                         width: '600',
                         height: '700',

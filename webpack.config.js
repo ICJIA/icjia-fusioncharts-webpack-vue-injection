@@ -21,7 +21,7 @@ let banner = 'Webpack build information: ' +
     '\ncja.irc@illinois.gov'
 
 module.exports = {
-    entry: './vue/main.js',
+    entry: ['babel-polyfill', './vue/main.js'],
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/dist/',
