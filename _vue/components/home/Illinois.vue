@@ -13,16 +13,19 @@
                     
                     
                       
-                      <div class="text-center">
-                      <select v-model="selected" @change="getSelection($event)">
+                      <div class="text-center hidden-md hidden-lg" v-if="visibility">
+                      <select v-model="selected" @change="getSelection($event)" style="width: 100%" class="select-style">
+                            <option disabled>Select your option</option>
                             <option v-for="data in selectData" :value="data.id">{{ data.title }}</option>
                         </select>
                     </div>
                     
-                        
+                   <display-about-redeploy v-if="!visibility"></display-about-redeploy> 
 
-                    <display-fact-sheet :countyMetaData="countyMetaData" :visibility="visibility"></display-fact-sheet>
-                    
+                <display-fact-sheet :countyMetaData="countyMetaData" v-if="visibility"></display-fact-sheet>
+                <div class="about-toggle" v-if="visibility"><a v-on:click='toggleViz'>About Adult Redeploy Illinois</a></div>
+
+                <div class="about-toggle hidden-md hidden-lg"  v-if="!visibility"><a v-on:click='displayFirstFactSheet'>Display Fact Sheets</a></div>
 
 
 
@@ -37,29 +40,50 @@
 <script>
     const loremIpsum = require('lorem-ipsum')
     import DisplayFactSheet from './DisplayFactSheet.vue'
+    import DisplayAboutRedeploy from './DisplayAboutRedeploy.vue'
     import axios from 'axios'
     import {
         EventBus
     } from '../../event-bus.js';
+
     export default {
         name: 'IllinoisMap',
         components: {
-            DisplayFactSheet
+            DisplayFactSheet,
+            DisplayAboutRedeploy,
+
+
         },
         mounted() {
             this.initializeChart()
             this.initializeCountySelect();
         },
         methods: {
+            consoleCallback(val) {
+                console.dir(JSON.stringify(val))
+            },
+            toggleViz() {
+                this.visibility = !this.visibility
+            },
             initializeCountySelect() {
+
+                // Grab all unique titles
                 let data = _.uniqBy(this.fm.data, function(elem) {
+
                     return JSON.stringify(_.pick(elem, ['title']));
                 });
+
+                // Remove unncessary keys
                 data = _.map(data, o => _.omit(o, ['toolText', 'value', 'displayValue']));
 
+                // Alphabetize
                 data = _.orderBy(data, ['title'], ['asc']);
 
+                // Finally, remove any elements that don't contain 'title' keys
                 data = _.filter(data, (o) => (typeof o.title !== 'undefined'))
+
+                // for (let [key, val] of Object.entries(data))
+                //     val.label = val.title
 
                 this.selectData = data;
 
@@ -70,16 +94,29 @@
             initializeChart() {
                 this.renderChart(this, this.setChartEvents(this));
             },
-            getSelection(event) {
-                this.selected = `${event.target.value}`
+            getSelection(e) {
+                this.selected = `${e.target.value}`
+                    //console.log(this.selected)
                 let metaData = this.getCountyMetaData('id', this.selected)
                 this.countyMetaData = metaData
                 this.visibility = true;
                 this.loadFactSheet(this.countyMetaData.title)
             },
+
+            // },
             loadFactSheet: function(t) {
+                // Generate lorem ipsum filler
                 this.countyMetaData.factSheet = this.getFillerContent(3, 'paragraphs', 'html');
-                //console.log('Load fact sheet: ', t, this.countyMetaData.factSheet)
+                // Ajax here
+
+            },
+            displayFirstFactSheet: function() {
+                this.selected = '001'
+                this.visibility = !this.visibility
+                let metaData = this.getCountyMetaData('id', '001')
+                this.countyMetaData = metaData
+                this.visibility = true;
+                this.loadFactSheet(this.countyMetaData.title)
             },
 
             getFillerContent: function(count, units, format) {
@@ -115,10 +152,7 @@
                 return myObj
 
             },
-            log: function(str) {
-                console.log('Log: ', str)
-                return this
-            },
+
             setChartEvents: function(vm) {
                 const fusionEventsObj = {
                     "entityClick": function(evt, data) {
@@ -132,7 +166,8 @@
                             vm.visibility = true;
                             //console.log('click')
                             vm.loadFactSheet(vm.countyMetaData.title)
-                            vm.selected = data.id
+                            vm.selected = vm.countyMetaData.id
+
 
                         }
                     },
@@ -163,11 +198,12 @@
         data() {
             return {
                 selected: '',
+                selected2: '',
                 countyId: '',
                 visibility: false,
                 countyMetaData: {},
                 vm: this,
-                selectData: {},
+                selectData: [],
                 testData: [{
                     "id": "001",
                     "displayValue": "AD",
@@ -702,7 +738,14 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-    .vue-test {
-        font-size: 36px;
+    .about-toggle {
+        float: right;
+        margin-top: -15px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    
+    .about-toggle:hover {
+        cursor: pointer;
     }
 </style>

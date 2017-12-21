@@ -36,6 +36,10 @@ module.exports = {
                 loader: "expose-loader?moment"
             },
             {
+                test: /jquery/,
+                loader: 'expose-loader?jQuery'
+            },
+            {
                 test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*$|$)/,
                 loader: 'file-loader'
             },
