@@ -25,7 +25,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/dist/',
-        filename: './js/[name].js',
+        filename: './js/main.js',
         chunkFilename: '[name]-chunk.js',
     },
     module: {
@@ -97,13 +97,13 @@ module.exports = {
         //     minChunks: 3,
         //     // (3 children must share the module before it's separated)
         // }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks(module, count) {
-                var context = module.context;
-                return context && context.indexOf('node_modules') >= 0;
-            },
-        }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'vendor',
+        //     minChunks(module, count) {
+        //         var context = module.context;
+        //         return context && context.indexOf('node_modules') >= 0;
+        //     },
+        // }),
     ],
     resolve: {
         alias: {
