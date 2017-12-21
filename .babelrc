@@ -1,6 +1,11 @@
 {
-  "presets": [
-    ["env", { "modules": false }],
-    "stage-3"
-  ]
+    "presets": [
+        ["env", {
+            "modules": false,
+            "targets": {
+                "browsers": ["last 3 versions", "safari >= 7"]
+            }
+        }],
+        "stage-3"
+    ]
 }
