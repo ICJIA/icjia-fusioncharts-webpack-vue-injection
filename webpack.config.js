@@ -21,7 +21,7 @@ let banner = 'Webpack build information: ' +
     '\ncja.irc@illinois.gov'
 
 module.exports = {
-    entry: './_vue/main.js',
+    entry: './vue/main.js',
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/dist/',

@@ -13,7 +13,7 @@
                     
                     
                       
-                      <div class="text-center" v-if="visibility">
+                      <div class="text-center" v-if="visibility" style="margin-top: 20px">
                       <select v-model="selected" @change="getSelection($event)" style="width: 100%" class="select-style">
                             <option disabled>Select your option</option>
                             <option v-for="data in selectData" :value="data.id">{{ data.title }}</option>
@@ -25,7 +25,7 @@
                 <display-fact-sheet :countyMetaData="countyMetaData" v-if="visibility"></display-fact-sheet>
                 <div class="about-toggle" v-if="visibility"><a v-on:click='toggleViz'>About Adult Redeploy Illinois&nbsp;&raquo;</a></div>
 
-                <div class="about-toggle"  v-if="!visibility"><a v-on:click='displayFirstFactSheet'>Display Fact Sheets&nbsp;&raquo;</a></div>
+                <div class="about-toggle"  v-if="!visibility"><a v-on:click='getFirstFactSheet'>Display Fact Sheets&nbsp;&raquo;</a></div>
 
 
 
@@ -96,26 +96,15 @@
             },
             getSelection(e) {
                 this.selected = `${e.target.value}`
-                    //console.log(this.selected)
-                let metaData = this.getCountyMetaData('id', this.selected)
-                this.countyMetaData = metaData
-                this.visibility = true;
+                this.countyMetaData = this.getCountyMetaData('id', this.selected)
                 this.loadFactSheet(this.countyMetaData.title)
             },
 
             // },
-            loadFactSheet: function(t) {
-                // Generate lorem ipsum filler
-                this.countyMetaData.factSheet = this.getFillerContent(3, 'paragraphs', 'html');
-                // Ajax here
 
-            },
-            displayFirstFactSheet: function() {
-                this.selected = '001'
-                this.visibility = !this.visibility
-                let metaData = this.getCountyMetaData('id', '001')
-                this.countyMetaData = metaData
-                this.visibility = true;
+            getFirstFactSheet: function() {
+                this.selected = this.fm.data[0].id
+                this.countyMetaData = this.getCountyMetaData('id', this.selected)
                 this.loadFactSheet(this.countyMetaData.title)
             },
 
@@ -150,6 +139,13 @@
                     });
                 }
                 return myObj
+
+            },
+            loadFactSheet: function(t) {
+                // Generate lorem ipsum filler
+                this.visibility = true;
+                this.countyMetaData.factSheet = this.getFillerContent(3, 'paragraphs', 'html');
+                // Ajax here
 
             },
 
