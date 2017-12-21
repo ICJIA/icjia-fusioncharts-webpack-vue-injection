@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="about-redeploy">
             <h1 class="h2" style="padding-bottom: 12px; border-bottom: 1px solid #ddd;">About Adult Redeploy Illinois</h1>
             <p>ARI was established by the <a href="http://www.ilga.gov/legislation/publicacts/fulltext.asp?Name=096-0761">Crime Reduction Act</a> (Public Act 96-0761) to provide financial incentives to local jurisdictions for programs that allow diversion of non-violent offenders from state prisons by providing community-based services. Grants are provided to counties, groups of counties, and judicial circuits to increase programming in their areas, in exchange for reducing the number of people they send to the Illinois Department of Corrections.</p>
 
@@ -29,5 +29,9 @@
 </script>
 
 <style>
-
+    .about-redeploy {
+        padding-bottom: 30px;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+    }
 </style>

@@ -13,7 +13,7 @@
                     
                     
                       
-                      <div class="text-center hidden-md hidden-lg" v-if="visibility">
+                      <div class="text-center" v-if="visibility">
                       <select v-model="selected" @change="getSelection($event)" style="width: 100%" class="select-style">
                             <option disabled>Select your option</option>
                             <option v-for="data in selectData" :value="data.id">{{ data.title }}</option>
@@ -23,9 +23,9 @@
                    <display-about-redeploy v-if="!visibility"></display-about-redeploy> 
 
                 <display-fact-sheet :countyMetaData="countyMetaData" v-if="visibility"></display-fact-sheet>
-                <div class="about-toggle" v-if="visibility"><a v-on:click='toggleViz'>About Adult Redeploy Illinois</a></div>
+                <div class="about-toggle" v-if="visibility"><a v-on:click='toggleViz'>About Adult Redeploy Illinois&nbsp;&raquo;</a></div>
 
-                <div class="about-toggle hidden-md hidden-lg"  v-if="!visibility"><a v-on:click='displayFirstFactSheet'>Display Fact Sheets</a></div>
+                <div class="about-toggle"  v-if="!visibility"><a v-on:click='displayFirstFactSheet'>Display Fact Sheets&nbsp;&raquo;</a></div>
 
 
 
@@ -227,12 +227,12 @@
                 }],
                 fm: {
                     "chart": {
-                        "caption": "Adult Redeploy Illinois",
-                        "subCaption": "SFY 2017",
+                        "caption": "Adult Redeploy Illinois SFY 2017",
+                        "subCaption": "Click county to display fact sheet",
                         "captionFontSize": "18",
                         "captionFontColor": "#222222",
                         "subcaptionFontSize": "14",
-                        "subcaptionFontColor": "#666666",
+                        "subcaptionFontColor": "#888888",
                         "animation": "0",
                         "showBevel": "0",
                         "showCanvasBorder": "0",
@@ -740,9 +740,10 @@
 <style scoped>
     .about-toggle {
         float: right;
-        margin-top: -15px;
+        margin-top: -10px;
         text-transform: uppercase;
         font-weight: 700;
+        font-size: 12px;
     }
     
     .about-toggle:hover {
